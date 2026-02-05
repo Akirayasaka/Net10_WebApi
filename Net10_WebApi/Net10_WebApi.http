@@ -1,0 +1,6 @@
+@Net10_WebApi_HostAddress = http://localhost:5105
+
+GET {{Net10_WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
