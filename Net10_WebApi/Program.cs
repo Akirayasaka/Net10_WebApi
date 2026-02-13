@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Net10_WebApi.Data;
+using Net10_WebApi.Models;
+using Net10_WebApi.Models.DTO;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddAutoMapper(am => {
+    am.CreateMap<VillaCreateDTO, Villa>();
+});
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Net10_WebApi.Data;
 using Net10_WebApi.Models;
@@ -11,10 +12,12 @@ namespace Net10_WebApi.Controllers
     public class VillaController : ControllerBase
     {
         private readonly ApplicationDbContext _db;
+        private readonly IMapper _mapper;
 
-        public VillaController(ApplicationDbContext db)
+        public VillaController(ApplicationDbContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -68,15 +71,9 @@ namespace Net10_WebApi.Controllers
                     return BadRequest("Villa data is required.");
                 }
 
-                Villa villa = new()
-                {
-                    Name = villaDTO.Name,
-                    Details = villaDTO.Details,
-                    ImageUrl = villaDTO.ImageUrl,
-                    Occupancy = villaDTO.Occupancy,
-                    Rate = villaDTO.Rate,
-                    Sqft = villaDTO.Sqft
-                };
+                Villa villa = _mapper.Map<Villa>(villaDTO);
+                villa.CreatedDate = DateTime.Now;
+
                 await _db.Villa.AddAsync(villa);
                 await _db.SaveChangesAsync();
                 return Ok(villa);
