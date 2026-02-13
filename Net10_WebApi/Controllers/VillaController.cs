@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Net10_WebApi.Data;
 using Net10_WebApi.Models;
+using Net10_WebApi.Models.DTO;
 
 namespace Net10_WebApi.Controllers
 {
@@ -54,6 +55,35 @@ namespace Net10_WebApi.Controllers
             {
 
                 return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred while retrieving villa with ID {id}: {ex.Message}");
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Villa>> CreateVilla(VillaCreateDTO villaDTO)
+        {
+            try
+            {
+                if (villaDTO == null)
+                {
+                    return BadRequest("Villa data is required.");
+                }
+
+                Villa villa = new()
+                {
+                    Name = villaDTO.Name,
+                    Details = villaDTO.Details,
+                    ImageUrl = villaDTO.ImageUrl,
+                    Occupancy = villaDTO.Occupancy,
+                    Rate = villaDTO.Rate,
+                    Sqft = villaDTO.Sqft
+                };
+                await _db.Villa.AddAsync(villa);
+                await _db.SaveChangesAsync();
+                return Ok(villa);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, $"An error occurred while creating the villa: {ex.Message}");
             }
         }
     }
